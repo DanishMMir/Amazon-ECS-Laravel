@@ -24,6 +24,9 @@
             .full-height {
                 height: 100vh;
             }
+            @php
+            echo "hello";
+            @endphp
 
             .flex-center {
                 align-items: center;
