@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/ss', function (){
+    return view('index');
 });
+
+Route::get('/',[
+
+	'as' => 'index.page',
+	'uses' => 'Home\IndexController@index'
+]);
