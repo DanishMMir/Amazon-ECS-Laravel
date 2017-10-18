@@ -177,6 +177,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * AmazonProAdvAPI Service Providers...
+         */
+
+
     ],
 
     /*
@@ -225,6 +230,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        /*
+         * AmazonProAdvAPI Aliases...
+         */
+        'BrowseNodeLookup' => packages\AmazonProAdvAPI\src\BrowseNodeLookup::class,
 
     ],
 

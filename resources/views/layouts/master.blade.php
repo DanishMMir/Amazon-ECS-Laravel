@@ -197,7 +197,7 @@
                     </section>
                     <section class="footer-bottom-block container">
                         <div class="row">
-                            <div class="col-sm-5 col-md-4 copyright-text"> &copy; 2016 <a href="#">Megatron</a>. All Rights Reserved. </div>
+                            <div class="col-sm-5 col-md-4 copyright-text"> &copy {{Carbon\Carbon::now()->format("Y")}} <a href="#">Megatron</a>. All Rights Reserved. </div>
                             <div class="col-sm-3 col-md-4"> Select Store:
                                 <div class="btn-group btn-select dropup"> <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> <span class="value">Main store</span> <span class="caret min"></span> </a>
                                     <ul class="dropdown-menu">

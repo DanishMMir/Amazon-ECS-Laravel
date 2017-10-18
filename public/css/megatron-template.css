@@ -1282,7 +1282,7 @@ body.back-bg .navbar .background {
 }
 body.back-bg .navbar-compact .background, body.back-bg .navbar-compact .background .container {
 	border-bottom: none;
-	background: #fff
+	background: #fff;
 }
 .back-to-top {
 	cursor: pointer;
@@ -4327,7 +4327,7 @@ _:valid\0, .contacts-form input.form-control, .contacts-form textarea.form-contr
 	margin: 0 auto;
 	overflow: hidden;
 	color: #fff;
-	background: url(../images/newsletter-bg.jpg) no-repeat 0 0;
+	/*background: url(../images/newsletter-bg.jpg) no-repeat 0 0;*/
 	padding: 10% 40px 10%
 }
 #popup-box-newsletter h1 {
@@ -4335,10 +4335,10 @@ _:valid\0, .contacts-form input.form-control, .contacts-form textarea.form-contr
 	line-height:1em;
 	color: #fff;
 	margin-bottom: 20px;
-	padding: 0
+	padding: 0;
 }
 #popup-box-newsletter .input-control input.form-control {
-	width: 340px
+	width: 340px;
 }
 #popup-bottom-message {
 	position: absolute;
