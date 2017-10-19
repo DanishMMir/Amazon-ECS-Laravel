@@ -1,26 +1,27 @@
 <?php
 namespace Packages\AmazonProAdvAPI\src\helpers;
+include_once (base_path('packages/AmazonProAdvAPI/config/amazoncredentials.php'));
 
 class APIHelper{
 
-    function buildURL($operation, Array $parameters, $responseGroup)
+    function buildURL($operation, $changingParams)
     {
         // Base URL
         define("BASE_URL","webservices.amazon");
         //  The region you are interested in
-        $locale = config('amazoncredentials.locale');
+        $locale = amazonCredentials('locale');
 
 
         $uri = "/onca/xml";
 
-        $params = array(
+        $fixedParams = array(
             "Service" => "AWSECommerceService",
             "Operation" => $operation,
-            "AWSAccessKeyId" => config('amazoncredentials.access_key_id'),
-            "AssociateTag" => config('amazoncredentials.associate_tag'),
-            "BrowseNodeId" => $parameters,
-            "ResponseGroup" => $responseGroup
+            "AWSAccessKeyId" => amazonCredentials('access_key_id'),
+            "AssociateTag" => amazonCredentials('associate_tag')
         );
+
+        $params = array_merge($fixedParams,$changingParams);
 
         // Set current timestamp if not set
         if (!isset($params["Timestamp"])) {
@@ -43,12 +44,12 @@ class APIHelper{
         $string_to_sign = "GET\n" . BASE_URL.".". $locale . "\n" . $uri . "\n" . $canonical_query_string;
 
         // Generate the signature required by the Product Advertising API
-        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, config('amazoncredentials.secret_access_key'), true));
+        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, amazonCredentials('secret_access_key'), true));
 
         // Generate the signed URL
         $request_url = 'http://' . BASE_URL.".". $locale . $uri . '?' . $canonical_query_string . '&Signature=' . rawurlencode($signature);
 
-        echo "Signed URL: \"" . $request_url . "\"";
+        return $request_url;
     }
 
     function buildParams($rawParams){
@@ -58,6 +59,7 @@ class APIHelper{
         $params['ResponseGroup'] = !isset($rawParams['ResponseGroup']) ?'':implode(",",$rawParams['ResponseGroup']);  //The type of product data you want returned.
         $params['Sort'] = !isset($rawParams['Sort']) ?'':$rawParams['Sort'];  //How items in the response are ordered.
         $params['BrowseNode'] = !isset($rawParams['BrowseNode']) ?'':$rawParams['BrowseNode'];    //Browse nodes are numbers that identify product categories.
+        $params['BrowseNodeId'] = !isset($rawParams['BrowseNodeId']) ?'':$rawParams['BrowseNodeId'];    //Browse nodes are numbers that identify product categories. -- For BrowseNodeLookup
         $params['Actor'] = !isset($rawParams['Actor']) ?'':$rawParams['Actor'];   //Actor name associated with the item.
         $params['Artist'] = !isset($rawParams['Artist']) ?'':$rawParams['Artist'];    //Artist name associated with the item.
         $params['Author'] = !isset($rawParams['Author']) ?'':$rawParams['Author'];    //Author name associated with the item.

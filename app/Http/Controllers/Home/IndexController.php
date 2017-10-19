@@ -41,10 +41,9 @@ class IndexController extends Controller{
     private function loadDevicesSubSec(){
         //load devices - Top Seller
         $params = Array();
-        $responseGroup = ['R1','R2','R3'];
-        $params['SearchIndex'] = 'hello';
+        $responseGroup = ['MostGifted','MostWishedFor'];
+        $params['BrowseNodeId'] = '1757252';
         $params['ResponseGroup'] = $responseGroup;
-        $params['BrowseNode'] = '1757252';
         $this->browseNodeLookup->browseNodeLookup($params);
     }
     private function loadAccessoriesSubSec(){

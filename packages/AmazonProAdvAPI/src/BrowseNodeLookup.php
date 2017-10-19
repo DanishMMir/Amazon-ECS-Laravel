@@ -1,7 +1,7 @@
 <?php
 namespace Packages\AmazonProAdvAPI\src;
 use Packages\AmazonProAdvAPI\src\helpers\APIHelper;
-use Packages\AmazonProAdvAPI\config\amazoncredentials;
+include_once (base_path('packages/AmazonProAdvAPI/config/amazoncredentials.php'));
 use InvalidArgumentException;
 
 
@@ -15,51 +15,92 @@ class BrowseNodeLookup{
         private $secretAccessKey;
         private $apiHelper;
     public  function __construct(){
-//        $this->validConfig();
-        $this->locale =config('amazoncredentials.locale');
-        $this->associateTag=config('amazoncredentials.associate_tag');
-        $this->accessKeyId = config('amazoncredentials.access_key_id');
-        $this->secretAccessKey = config('amazoncredentials.secret_access_key');
-        $this->apiHelper = new APIHelper();
+            $this->validConfig();
+            $this->locale = amazonCredentials('locale');
+            $this->associateTag = amazonCredentials('associate_tag');
+            $this->accessKeyId = amazonCredentials('access_key_id');
+            $this->secretAccessKey = amazonCredentials('secret_access_key');
+            $this->apiHelper = new APIHelper();
+
     }
-    public function browseNodeLookup($rawParams ){
+    public function browseNodeLookup($rawParams){
         $params = $this->apiHelper->buildParams($rawParams);
-        echo "<pre>";
-//        print_r(ENV);
-        echo config('amazoncredentials.secret_access_key');
-        print_r($params);
-        exit;
+
+        $validParams = array('BrowseNodeId','ResponseGroup');
         $validResponseGroup = array('BrowseNodeInfo','MostGifted','NewReleases','MostWishedFor','TopSellers');
-        if(!$responseGroup || !array_key_exists($responseGroup, $validResponseGroup)) {
+
+
+        if(!isset($params['BrowseNodeId'])){
             throw new InvalidArgumentException(
                 sprintf(
-                    'You have configured one or more invalid Response Group. Possible Response Groups are: %s',
-                    implode(', ', $validResponseGroup)
+                    'You have not provided the required parameter: %s', 'BrowseNodeId'
                 )
             );
             return false;
         }
 
-        // handle OK
-        buildURL('BrowseNodeLookup',$browseNodeId,$responseGroup);
-        return array(
+        foreach ($params as $paramsKey => $paramsValue) {
+            if (!in_array($paramsKey, $validParams)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'You have configured one or more invalid Request Parameters. Possible Request Parameters are: %s',
+                        implode(', ', $validParams)
+                    )
+                );
+                return false;
+            }
+        }
 
-        );
+        foreach (explode(",",$params['ResponseGroup']) as $responseGroup) {
+            if (!in_array($responseGroup, $validResponseGroup)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'You have configured one or more invalid Response Group. Possible Response Groups are: %s',
+                        implode(', ', $validResponseGroup)
+                    )
+                );
+                return false;
+            }
+        }
+
+        // handle OK
+        $signedURL = $this->apiHelper->buildURL('BrowseNodeLookup',$params);
+//        echo $signedURL;
+//        echo "<br>";
+
+        // Get cURL resource
+        $curl = curl_init();
+// Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $signedURL,
+        ));
+// Send the request & save response to $resp
+        $resp = curl_exec($curl);
+// Close request to clear up some resources
+        curl_close($curl);
+
+        echo $resp;
+//        return array(
+//
+//        );
+
+        return null;
 
     }
     private function validConfig()
     {
-        if(empty(config('amazoncredentials.access_key_id')) || empty(config('amazoncredentials.secret_access_key')) || empty(config('amazoncredentials.associate_tag')))
+        if(empty(amazonCredentials('access_key_id')) || empty(amazonCredentials('secret_access_key')) || empty(amazonCredentials('associate_tag')))
         {
             throw new InvalidArgumentException('No Access Key, Secret Key or Associate Tag has been set.');
         }
 
-        if(!in_array(config('amazoncredentials.locale'), $this->locales))
+        if(!in_array(amazonCredentials('locale'), $this->locales))
         {
             throw new InvalidArgumentException(
                 sprintf(
                     'You have configured an invalid locale "%s". Possible locales are: %s',
-                    config('amazon.locale'),
+                    amazonCredentials('locale'),
                     implode(', ', $this->locales)
                 )
             );

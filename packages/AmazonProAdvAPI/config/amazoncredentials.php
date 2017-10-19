@@ -7,7 +7,7 @@
  */
 function amazonCredentials($key = NULL)
 {
-    $amazonCredentials = [
+    $credentials = [
 
         /**
          * Your affiliate associate tag.
@@ -42,8 +42,8 @@ function amazonCredentials($key = NULL)
 
 
     ];
-    if (isset($key))
-        return $amazonCredentials [$key];
+    if (empty($key))
+        return $credentials;
     else
-        return $amazonCredentials;
+        return $credentials[$key];
 }
