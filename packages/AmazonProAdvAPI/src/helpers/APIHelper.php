@@ -1,15 +1,13 @@
 <?php
 namespace Packages\AmazonProAdvAPI\src\helpers;
-include_once (base_path('packages/AmazonProAdvAPI/config/amazoncredentials.php'));
-
-class APIHelper{
+trait APIHelper{
 
     function buildURL($operation, $changingParams)
     {
         // Base URL
         define("BASE_URL","webservices.amazon");
         //  The region you are interested in
-        $locale = amazonCredentials('locale');
+        $locale = config('amazoncredentials.locale');
 
 
         $uri = "/onca/xml";
@@ -17,8 +15,8 @@ class APIHelper{
         $fixedParams = array(
             "Service" => "AWSECommerceService",
             "Operation" => $operation,
-            "AWSAccessKeyId" => amazonCredentials('access_key_id'),
-            "AssociateTag" => amazonCredentials('associate_tag')
+            "AWSAccessKeyId" => config('amazoncredentials.access_key_id'),
+            "AssociateTag" => config('amazoncredentials.associate_tag')
         );
 
         $params = array_merge($fixedParams,$changingParams);
@@ -44,7 +42,7 @@ class APIHelper{
         $string_to_sign = "GET\n" . BASE_URL.".". $locale . "\n" . $uri . "\n" . $canonical_query_string;
 
         // Generate the signature required by the Product Advertising API
-        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, amazonCredentials('secret_access_key'), true));
+        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, config('amazoncredentials.secret_access_key'), true));
 
         // Generate the signed URL
         $request_url = 'http://' . BASE_URL.".". $locale . $uri . '?' . $canonical_query_string . '&Signature=' . rawurlencode($signature);

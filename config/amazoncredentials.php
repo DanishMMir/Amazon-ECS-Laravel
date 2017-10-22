@@ -5,9 +5,8 @@
  * Date: 4/10/17
  * Time: 9:17 PM
  */
-function amazonCredentials($key = NULL)
-{
-    $credentials = [
+
+return [
 
         /**
          * Your affiliate associate tag.
@@ -42,8 +41,3 @@ function amazonCredentials($key = NULL)
 
 
     ];
-    if (empty($key))
-        return $credentials;
-    else
-        return $credentials[$key];
-}

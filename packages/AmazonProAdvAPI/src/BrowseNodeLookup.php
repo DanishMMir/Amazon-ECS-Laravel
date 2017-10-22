@@ -1,11 +1,12 @@
 <?php
 namespace Packages\AmazonProAdvAPI\src;
 use Packages\AmazonProAdvAPI\src\helpers\APIHelper;
-include_once (base_path('packages/AmazonProAdvAPI/config/amazoncredentials.php'));
 use InvalidArgumentException;
+use Illuminate\Support\Facades\Response;
 
 
 class BrowseNodeLookup{
+    use APIHelper;
         private $locales = [
             'co.uk', 'com', 'ca', 'com.br', 'de', 'es', 'fr', 'in', 'it', 'co.jp', 'com.mx'
         ];
@@ -13,18 +14,15 @@ class BrowseNodeLookup{
         private $associateTag;
         private $accessKeyId;
         private $secretAccessKey;
-        private $apiHelper;
     public  function __construct(){
             $this->validConfig();
-            $this->locale = amazonCredentials('locale');
-            $this->associateTag = amazonCredentials('associate_tag');
-            $this->accessKeyId = amazonCredentials('access_key_id');
-            $this->secretAccessKey = amazonCredentials('secret_access_key');
-            $this->apiHelper = new APIHelper();
-
+            $this->locale = config('amazoncredentials.locale');
+            $this->associateTag = config('amazoncredentials.associate_tag');
+            $this->accessKeyId = config('amazoncredentials.access_key_id');
+            $this->secretAccessKey = config('amazoncredentials.secret_access_key');
     }
     public function browseNodeLookup($rawParams){
-        $params = $this->apiHelper->buildParams($rawParams);
+        $params = $this->buildParams($rawParams);
 
         $validParams = array('BrowseNodeId','ResponseGroup');
         $validResponseGroup = array('BrowseNodeInfo','MostGifted','NewReleases','MostWishedFor','TopSellers');
@@ -64,22 +62,19 @@ class BrowseNodeLookup{
         }
 
         // handle OK
-        $signedURL = $this->apiHelper->buildURL('BrowseNodeLookup',$params);
-//        echo $signedURL;
-//        echo "<br>";
+        $signedURL = $this->buildURL('BrowseNodeLookup',$params);
 
         // Get cURL resource
         $curl = curl_init();
 // Set some options - we are passing in a useragent too here
         curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_RETURNTRANSFER => 'TRUE',
             CURLOPT_URL => $signedURL,
         ));
 // Send the request & save response to $resp
         $resp = curl_exec($curl);
 // Close request to clear up some resources
         curl_close($curl);
-
         echo $resp;
 //        return array(
 //
@@ -90,17 +85,17 @@ class BrowseNodeLookup{
     }
     private function validConfig()
     {
-        if(empty(amazonCredentials('access_key_id')) || empty(amazonCredentials('secret_access_key')) || empty(amazonCredentials('associate_tag')))
+        if(empty(config('amazoncredentials.access_key_id')) || empty(config('amazoncredentials.secret_access_key')) || empty(config('amazoncredentials.associate_tag')))
         {
             throw new InvalidArgumentException('No Access Key, Secret Key or Associate Tag has been set.');
         }
 
-        if(!in_array(amazonCredentials('locale'), $this->locales))
+        if(!in_array(config('amazoncredentials.locale'), $this->locales))
         {
             throw new InvalidArgumentException(
                 sprintf(
                     'You have configured an invalid locale "%s". Possible locales are: %s',
-                    amazonCredentials('locale'),
+                    config('amazoncredentials.locale'),
                     implode(', ', $this->locales)
                 )
             );
