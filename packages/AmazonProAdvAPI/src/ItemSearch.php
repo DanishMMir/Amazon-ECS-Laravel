@@ -129,7 +129,7 @@ class ItemSearch
             return false;
         }
 
-        if (isset($params['ConditiIncludeReviewsSummaryon'])? !in_array($params['IncludeReviewsSummary'], $validIncludeReviewsSummaries) : false) {
+        if (isset($params['IncludeReviewsSummary'])? !in_array($params['IncludeReviewsSummary'], $validIncludeReviewsSummaries) : false) {
             throw new InvalidArgumentException(
                 sprintf(
                     'You have configured a wrong Include Reviews Summary. Possible Include Reviews Summaries are: %s',
@@ -139,7 +139,7 @@ class ItemSearch
             return false;
         }
 
-        if (isset($params['ConditiIncludeReviewsSummaryon'])? !in_array($params['MerchantId'], $validMerchantIds) : false) {
+        if (isset($params['MerchantId'])? !in_array($params['MerchantId'], $validMerchantIds) : false) {
             throw new InvalidArgumentException(
                 sprintf(
                     'You have configured a wrong Merchant Id. Possible Merchant Ids are: %s',
@@ -149,7 +149,7 @@ class ItemSearch
             return false;
         }
 
-        if (isset($params['ConditiIncludeReviewsSummaryon'])? !in_array($params['RelationshipType'], $validRelationshipTypes) : false) {
+        if (isset($params['RelationshipType'])? !in_array($params['RelationshipType'], $validRelationshipTypes) : false) {
             throw new InvalidArgumentException(
                 sprintf(
                     'You have configured a wrong Relationship Type. Possible Relationship Types are: %s',
