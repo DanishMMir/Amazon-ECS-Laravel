@@ -187,7 +187,9 @@ class ItemSearch
         $resp = curl_exec($curl);
 // Close request to clear up some resources
         curl_close($curl);
-        echo $resp;
+        $xml = new \SimpleXMLElement($resp);
+        echo "<pre>";
+        print_r($xml);
 //        return array(
 //
 //        );
