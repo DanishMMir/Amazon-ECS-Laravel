@@ -51,15 +51,19 @@ class IndexController extends Controller{
     private function loadDevicesSubSec(){
         //load devices - Top Seller
         $params = Array();
-//        $responseGroup = ['Accessories','Offers'];
+        $responseGroup = ['Images','ItemAttributes','Offers'];
 //        $params['BrowseNodeId'] = '2619526011';
 //        $params['BrowseNode'] = '2619526011';
-//        $params['SearchIndex'] = 'All';
-          $params['ItemId'] = 'B00G7H793G';
-//        $params['ResponseGroup'] = $responseGroup;
+        $params['Keywords'] = 'OnePlus';
+        $params['Brand'] = 'OnePlus';
+
+
+        $params['SearchIndex'] = 'Electronics';
+//          $params['ItemId'] = 'B00G7H793G';
+        $params['ResponseGroup'] = $responseGroup;
 //        $this->browseNodeLookup->browseNodeLookup($params);
-//        $this->itemSearch->itemSearch($params);
-        $this->similarityLookup->similarityLookup($params);
+        $this->itemSearch->itemSearch($params);
+//        $this->similarityLookup->similarityLookup($params);
 
 //        $this->itemLookup->itemLookup($params);
 
